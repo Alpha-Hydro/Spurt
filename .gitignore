@@ -1,2 +1,4 @@
 /.idea/
 /stats.json
+node_modules
+build

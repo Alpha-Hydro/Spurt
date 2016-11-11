@@ -1,11 +1,8 @@
 module.exports = function () {
-  var element = document.createElement('h1');
-
-  element.id = 'head';
-  element.className = 'pure-button';
-  element.classList.add('pure-button-primary');
+  var element = document.createElement('div');
+  element.className = 'valign';
   //element.classList.add('pure-button-active');
-  element.innerHTML = 'Hello worlds !!!';
+  element.innerHTML = 'Spurt.fi';
 
   return element;
 };

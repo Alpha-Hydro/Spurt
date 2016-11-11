@@ -1,5 +1,5 @@
 {
-  "name": "webpack-demo",
+  "name": "spurt.fi",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "spurt.fi",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.10.4",
