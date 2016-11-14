@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import ComingSoon from './components/ComingSoon';
+
 if(process.env.NODE_ENV !== 'production') {
   React.Perf = require('react-addons-perf');
 }
 
-document.body.className = 'valign-wrapper';
-document.getElementById('app').className = 'valign';
+document.getElementById('app').className = 'valign-wrapper';
 
 ReactDOM.render(
-  <div>Spurt.fi</div>,
+  <ComingSoon />,
   document.getElementById('app')
 );

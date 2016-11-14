@@ -62,6 +62,7 @@ switch(TARGET) {
         },
         output: {
           path: PATHS.build,
+					publicPath: '/assets/',
           filename: '[name].[chunkhash].js',
           chunkFilename: '[chunkhash].js'
         }
