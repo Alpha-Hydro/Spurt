@@ -1,4 +1,6 @@
-/.idea/
-/stats.json
-node_modules
-build
+node_modules/
+build/
+coverage/
+.eslintcache
+
+.idea

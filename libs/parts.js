@@ -1,17 +1,80 @@
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const PurifyCSSPlugin = require('purifycss-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const NpmInstallPlugin = require('npm-install-webpack-plugin');
 
+exports.indexTemplate = function(options) {
+  return {
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: require('html-webpack-template'),
+        title: options.title,
+        appMountId: options.appMountId,
+        inject: false
+      })
+    ]
+  };
+};
+
+exports.loadJSX = function(include) {
+  return {
+    module: {
+      loaders: [
+        {
+          test: /\.(js|jsx)$/,
+          // Enable caching for extra performance
+          loaders: ['babel?cacheDirectory'],
+          include: include
+        }
+      ]
+    }
+  };
+};
+
+exports.loadIsparta = function(include) {
+  return {
+    module: {
+      preLoaders: [
+        {
+          test: /\.(js|jsx)$/,
+          loaders: ['isparta-instrumenter'],
+          include: include
+        }
+      ]
+    }
+  };
+};
+
+exports.lintJSX = function(include) {
+  return {
+    module: {
+      preLoaders: [
+        {
+          test: /\.(js|jsx)$/,
+          loaders: ['eslint'],
+          include: include
+        }
+      ]
+    }
+  };
+};
+
+exports.enableReactPerformanceTools = function() {
+  return {
+    module: {
+      loaders: [
+        {
+          test: require.resolve('react'),
+          loader: 'expose?React'
+        }
+      ]
+    }
+  };
+};
 
 exports.devServer = function(options) {
-  return {
-    watchOptions: {
-      // Delay the rebuild after the first change
-      aggregateTimeout: 300,
-      // Poll using interval (in ms, accepts boolean too)
-      poll: 1000
-    },
+  const ret = {
     devServer: {
       // Enable history API fallback so HTML5 History API based
       // routing works. This is a good default that will come
@@ -44,7 +107,18 @@ exports.devServer = function(options) {
       })
     ]
   };
-}
+
+  if(options.poll) {
+    ret.watchOptions = {
+      // Delay the rebuild after the first change
+      aggregateTimeout: 300,
+      // Poll using interval (in ms, accepts boolean too)
+      poll: 1000
+    };
+  }
+
+  return ret;
+};
 
 exports.setupCSS = function(paths) {
   return {
@@ -58,7 +132,7 @@ exports.setupCSS = function(paths) {
       ]
     }
   };
-}
+};
 
 exports.minify = function() {
   return {
@@ -70,7 +144,7 @@ exports.minify = function() {
       })
     ]
   };
-}
+};
 
 exports.setFreeVariable = function(key, value) {
   const env = {};
@@ -81,7 +155,7 @@ exports.setFreeVariable = function(key, value) {
       new webpack.DefinePlugin(env)
     ]
   };
-}
+};
 
 exports.extractBundle = function(options) {
   const entry = {};
@@ -94,23 +168,24 @@ exports.extractBundle = function(options) {
       // Extract bundle and manifest files. Manifest is
       // needed for reliable caching.
       new webpack.optimize.CommonsChunkPlugin({
-        names: [options.name, 'manifest']
+        names: [options.name, 'manifest'],
+
+        // options.name modules only
+        minChunks: Infinity
       })
     ]
   };
-}
+};
 
 exports.clean = function(path) {
   return {
     plugins: [
       new CleanWebpackPlugin([path], {
-        // Without `root` CleanWebpackPlugin won't point to our
-        // project and will fail to work.
         root: process.cwd()
       })
     ]
   };
-}
+};
 
 exports.extractCSS = function(paths) {
   return {
@@ -129,39 +204,14 @@ exports.extractCSS = function(paths) {
       new ExtractTextPlugin('[name].[chunkhash].css')
     ]
   };
-}
+};
 
-exports.purifyCSS = function(paths) {
+exports.npmInstall = function(options) {
+  options = options || {};
+
   return {
     plugins: [
-      new PurifyCSSPlugin({
-        basePath: process.cwd(),
-        // `paths` is used to point PurifyCSS to files not
-        // visible to Webpack. You can pass glob patterns
-        // to it.
-        paths: paths
-      }),
+      new NpmInstallPlugin(options)
     ]
   };
-}
-
-exports.loadJSX = function(paths) {
-  return {
-    module: {
-      loaders: [
-        {
-          test: /\.jsx?$/,
-          // Enable caching for improved performance during development
-          // It uses default OS directory by default. If you need
-          // something more custom, pass a path to it.
-          // I.e., babel?cacheDirectory=<path>
-          loaders: ['babel?cacheDirectory'],
-          // Parse only app files! Without this it will go through
-          // the entire project. In addition to being slow,
-          // that will most likely result in an error.
-          include: paths
-        }
-      ]
-    }
-  };
-}
+};

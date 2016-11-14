@@ -1,15 +1,13 @@
 html, body {
     height: 100vh;
 }
-
 body {
-  background: cornsilk;
-}
-:local(.redButton) {
-  background: red;
+  background-color: cornsilk;
+
+  font-family: sans-serif;
 }
 .text-center{
-  text-align: center;
+    text-align: center;
 }
 .valign-wrapper {
     display: flex;
@@ -19,3 +17,4 @@ body {
     display: block;
     margin: 0 auto;
 }
+
