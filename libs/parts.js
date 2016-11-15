@@ -9,6 +9,11 @@ exports.indexTemplate = function(options) {
     plugins: [
       new HtmlWebpackPlugin({
         template: require('html-webpack-template'),
+				minify: {
+					collapseWhitespace: true,
+					collapseInlineTagWhitespace: true,
+					conservativeCollapse: true
+				},
         title: options.title,
         appMountId: options.appMountId,
         inject: false
@@ -134,6 +139,20 @@ exports.setupCSS = function(paths) {
   };
 };
 
+exports.setupSASS = function(paths) {
+  return {
+    module: {
+      loaders: [
+        {
+					test: /\.scss$/,
+					loaders: ['style', 'css', 'sass'],
+					include: paths
+        }
+      ]
+    }
+  };
+};
+
 exports.minify = function() {
   return {
     plugins: [
@@ -193,9 +212,14 @@ exports.extractCSS = function(paths) {
       loaders: [
         // Extract CSS during build
         {
-          test: /\.css$/,
+          test: /\.css$/i,
           loader: ExtractTextPlugin.extract('style', 'css'),
           include: paths
+        },
+        // Extract CSS during build
+        {
+          test: /\.scss$/i,
+          loader: ExtractTextPlugin.extract(['css', 'sass'])
         }
       ]
     },

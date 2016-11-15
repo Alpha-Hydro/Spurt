@@ -10,7 +10,7 @@ const PATHS = {
   app: path.join(__dirname, 'app'),
   style: [
 		path.join(__dirname, 'node_modules', 'purecss'),
-    path.join(__dirname, 'app', 'main.css')
+    path.join(__dirname, 'app', 'main.scss')
   ],
   build: path.join(__dirname, 'build'),
   test: path.join(__dirname, 'tests')
@@ -101,6 +101,7 @@ switch(TARGET) {
         }
       },
       parts.setupCSS(PATHS.style),
+      parts.setupSASS(PATHS.style),
       parts.devServer({
         // Customize host/port here if needed
         host: process.env.HOST,
